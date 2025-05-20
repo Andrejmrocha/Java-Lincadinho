@@ -22,11 +22,8 @@ public class UserService {
         } else {
             String email = jwt.getClaimAsString("email");
             String name = jwt.getClaimAsString("name");
-            System.out.println(jwt.getClaims());
-
             if (name == null) {
                 String firstName = jwt.getClaimAsString("firstName");
-                System.out.println(firstName);
                 String lastName = jwt.getClaimAsString("lastName");
                 if (firstName != null && lastName != null) {
                     name = firstName + " " + lastName;
@@ -36,7 +33,7 @@ public class UserService {
                     name = email;
                 }
             }
-            User newUser = new User(idClerk, email, name);
+            User newUser = new User(idClerk, name, email);
             return userRepository.save(newUser);
         }
     }

@@ -24,7 +24,7 @@ public class ProfileController {
         User localUser = userService.getOrCreateByClerkId(jwt);
         return ResponseEntity.ok(Map.of(
                 "LocalUserId", localUser.getId(),
-                "ClerUserId", localUser.getClerkId(),
+                "ClerkUserId", localUser.getClerkId(),
                 "email", localUser.getEmail(),
                 "name", localUser.getName()
         ));
