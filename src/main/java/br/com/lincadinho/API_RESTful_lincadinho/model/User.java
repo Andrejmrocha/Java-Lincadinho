@@ -35,6 +35,10 @@ public class User{
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+
     public User(String clerkId, String name, String email) {
         this.clerkId = clerkId;
         this.name = name;
@@ -45,5 +49,9 @@ public class User{
     public User(String clerkId, String email) {
         this.clerkId = clerkId;
         this.email = email;
+    }
+
+    public Long getOrganizationIdOrNull() {
+        return (this.organization != null) ? this.organization.getId() : null;
     }
 }
