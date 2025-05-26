@@ -1,7 +1,10 @@
 package br.com.lincadinho.API_RESTful_lincadinho.service;
 
+import br.com.lincadinho.API_RESTful_lincadinho.model.Organization;
 import br.com.lincadinho.API_RESTful_lincadinho.model.User;
+import br.com.lincadinho.API_RESTful_lincadinho.repository.OrganizationRepository;
 import br.com.lincadinho.API_RESTful_lincadinho.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     public User getOrCreateByClerkId(Jwt jwt) {
         String idClerk = jwt.getSubject();
@@ -36,5 +42,17 @@ public class UserService {
             User newUser = new User(idClerk, name, email);
             return userRepository.save(newUser);
         }
+    }
+
+    public User updateUser(Jwt jwt, Long orgId) {
+        User user = getOrCreateByClerkId(jwt);
+        Organization organization = organizationRepository.findById(orgId)
+                    .orElseThrow(() -> new EntityNotFoundException("Organização com id " + orgId + " não encontrada"));
+        if (organization.getMembers() != null) {
+            organization.getMembers().add(user);
+        }
+        user.setOrganization(organization);
+        userRepository.save(user);
+        return user;
     }
 }
